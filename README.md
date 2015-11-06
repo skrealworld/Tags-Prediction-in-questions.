@@ -1,6 +1,9 @@
 # Tags-Prediction-in-questions.
 System to predict tags for questions asked in stack overflow kind of websites.  
 
+Related Project - 
+http://yasermartinez.com/blog/posts/stack-exchange-tag-predictions.html
+
 Related Papers- 
 
 1 - http://chil.rice.edu/research/pdf/StanleyByrne2013StackOverflow.pdf
