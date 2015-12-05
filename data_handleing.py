@@ -4,48 +4,76 @@ This script is to deal with huge data of questions and related tags.
 Author - Sourabh Kulhare
 '''
 
+
+#This is the data handeling script for project, 
+#function = getTrainData(nSample) = return = list of traning samples. 
+#function = getTestData(nSample) = return = list of testing samples. 
+#all of these functions includes preprocessing of data also. 
+
 import csv
 from itertools import islice
 
 
-csvfile = open('/Users/SK_Mac/Documents/Github/NLP_data/Test.csv', 'r')
-
-testreader = csv.reader(csvfile)
-
-for x in range(1,3):
-	print(testreader[x])
 
 
+def getTrainData():
 
 
-def line_stream(filename, stop=None):
-    """Streams `filename` one line at a time, optionally stopping at `stop`"""
-    with open(filename) as csvfile:
-        next(csvfile, None)  # skip header
-        for line in islice(csv.reader(csvfile, delimiter=',', quotechar='"'), stop):
-            yield line
-            
-def title_tokenize(s, stopwords=STOPWORDS):
-    """Extract valid SO tags style tokens, from string `s` excluding tokens in `STOPWORDS`"""
-    return [token for token in re.findall(r'\b\w[\w#+.-]*(?<!\.$)', s.lower())
-                    if token not in stopwords]
+    trainData = []
+
+    # Import training .csv file. 
+    csvfileTr = open('/Users/SK_Mac/Documents/Github/NLP_data/Train.csv', 'r')
+    trainreader = csv.reader(csvfileTr)
+
+    """
+    Convert reader object into list. 
+    ID = [i][0]
+    Title of question = [i][1]
+    Body of question = [i][2]
+    Tags = [i][3]  // Only for training data, for testing data we don't have tags. 
+    """
+
+    data = list(trainreader);
+
+    #divide data into training and testing
+
+    trainData = []
+    testData = []
+
+
+    for x in range(0,20000):
+        trainData.appand(data[x])
 
 
 
+return trainData
 
 
 
-from collections import Counter
-
-def basic_recommender(title, usefulness=usefulness):
-    return Counter({word: usefulness.get(word, 0)
-                  for word in title_tokenize(title)})
+def getTestData():
+    testData = []
     
+    # Import testing .csv file. 
+    csvfileTs = open('/Users/SK_Mac/Documents/Github/NLP_data/Test.csv', 'r')
+
+    testreader = csv.reader(csvfileTs)
+
+    """
+    Convert reader object into list. 
+    ID = [i][0]
+    Title of question = [i][1]
+    Body of question = [i][2]
+    Tags = [i][3]  // Only for training data, for testing data we don't have tags. 
+
+    """
+
+
+    for x in range(0,1000):
+        testData.appand(data[x])
 
 
 
-
-
+return testData
 
 
 
