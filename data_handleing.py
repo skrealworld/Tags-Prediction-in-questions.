@@ -82,16 +82,50 @@ def getTestData():
 
 
 
+def getTags(N):
+    
+    import pickle
+    from nltk import word_tokenize
 
-data = {}
+    from nltk import FreqDist
 
-list1 = pickle.load(open("/Users/SK_Mac/Documents/Github/NLP_data/trainSubData.p","rb"))
+    list1 = pickle.load(open("/Users/SK_Mac/Documents/Github/NLP_data/trainSubData.p","rb"))
 
-list2 = pickle.load(open("/Users/SK_Mac/Documents/Github/NLP_data/testSubData.p","rb"))
+    list2 = pickle.load(open("/Users/SK_Mac/Documents/Github/NLP_data/testSubData.p","rb"))
 
-list3 = list1 + list2
+    list3 = list1 + list2
 
-length = len(list3)
+    length = len(list3)
+
+    tagText = ""
+
+    for x in range(length):
+        tagText = tagText + list3[x][3]
+ 
+
+    tokens = word_tokenize(tagText)
+
+    fdist = FreqDist(tokens)
+
+    topNTags = fdist.most_common(N+1)
+
+    l = len(topNTags)
+
+    nTags = []
+
+    for x in range(1,l):
+        nTags.append(topNTags[x][0])
+
+    return nTags
+
+
+
+
+
+
+
+
+
 
 
 
