@@ -8,13 +8,15 @@ from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import CountVectorizer
 from nltk import word_tokenize
 from sklearn.svm import LinearSVC
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn import preprocessing
 from random import randint
 from colorama import Fore, Back, Style
-
-
+from bs4 import BeautifulSoup
+from sklearn.linear_model import SGDClassifier
+from sklearn.feature_extraction.text import HashingVectorizer
 
 def titleLengthFeature(data):
 
@@ -32,45 +34,13 @@ def titleLengthFeature(data):
 	return titleLength
 
 
-
-'''
-def titleTfidfFeatures(data):
-
-	wholeData = data['trainData'] + data['testData']
-
-	wholeTfidf = {}
-
-def tokenize(text):
-	tokens = nltk.word_tokenize(text)
-
-
-return tokens
-          
-from sklearn.feature_extraction.text import TfidfVectorizer
-         tfidf = TfidfVectorizer(tokenizer=tokenize, stop_words='english')
-         tfs = tfidf.fit_transform(data['trainData'])
-
-          wholeTfidf['trainData'] = tfs
-
-
-          tfs = tfidf.fit_transform(data['testData'])
-
-
-          wholeTfidf['testData'] = tfs
-	
- 	return wholeTfidf
-
-
-'''
-
-
 # import the training data
 list1 = pickle.load(open("/Users/SK_Mac/Documents/Github/NLP_data/trainSubData.p","rb"))
 
 random.shuffle(list1)
 
 #decide the amount of data you want to use for training. 
-train_Length = len(list1)//1000
+train_Length = len(list1)//50
 
 print("Number of training samples is :- ", train_Length)
 
@@ -80,11 +50,12 @@ train_TitleData_list = []
 #Store features as list. 
 for x in range(train_Length):
 
-	 #temp = list1[x][1]+list1[x][]
+	 #Preprocessing part
 
-	 
-	 temp_list = 3*list1[x][1] + list1[x][2] + 10*list1[x][3] 
 
+	 temp_list = 3*list1[x][1] + 4*(BeautifulSoup(list1[x][2],"html.parser").text) + 2*list1[x][3] 
+
+	 #temp_list = 4*list1[x][2] + 3*list1[x][1] + 2*list1[x][3] 
 
 	 train_TitleData_list.append(temp_list)
 
@@ -112,7 +83,7 @@ list2 = pickle.load(open("/Users/SK_Mac/Documents/Github/NLP_data/testSubData.p"
 
 random.shuffle(list2)
 
-test_Length = len(list2)//1000
+test_Length = len(list2)//100
 
 print("Number of testing samples is :- ", test_Length)
 
@@ -149,11 +120,29 @@ Y = lb.fit_transform(y_train_text)
 
 
 classifier = Pipeline([
+    ('tfidf_vec', TfidfVectorizer(min_df=50, ngram_range =(1,3))),
+    ('tfidf_trans', TfidfTransformer()),
+    ('clf', OneVsRestClassifier(LinearSVC()))])
+
+
+# Base line 2 
+'''
+classifier = Pipeline([
+    ('tfidf_vec', TfidfVectorizer(min_df=50,max_features =450)),
+    ('tfidf_trans', TfidfTransformer()),
+    ('clf', OneVsRestClassifier(SGDClassifier(loss='log',n_jobs = -1)))])
+
+'''
+
+#Baseline Classifier - 1
+'''
+classifier = Pipeline([
     ('vectorizer', CountVectorizer()),
     ('tfidf', TfidfTransformer()),
     ('clf', OneVsRestClassifier(LinearSVC()))])
 
 
+'''
 classifier.fit(X_train, Y)
 predicted = classifier.predict(X_test)
 all_labels = lb.inverse_transform(predicted)
