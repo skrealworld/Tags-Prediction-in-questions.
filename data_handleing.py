@@ -26,7 +26,7 @@ Author - Sourabh Kulhare
 import csv
 from itertools import islice
 import pickle
-
+import random
 
 #Function to import whole data at once and return a dictionary. 
 
@@ -39,14 +39,10 @@ def getData():
     data['testData']  = pickle.load(open("/Users/SK_Mac/Documents/Github/NLP_data/testSubData.p","rb"))
 
     return data
- 
 
 
 
-def getTrainData():
-
-
-    trainData = pickle.load(open("/Users/SK_Mac/Documents/Github/NLP_data/trainSubData.p","rb"))
+def getTrainData(N):
 
     """
     Convert reader object into list. 
@@ -56,29 +52,50 @@ def getTrainData():
     Tags = [i][3] 
     """
 
+    trainData = pickle.load(open("/Users/SK_Mac/Documents/Github/NLP_data/trainSubData.p","rb"))
+
+    random.shuffle(trainData)
+
+    data = []
+
+
+    for x in range(N):
+        data.append(trainData[x])
+
+
+
+
     #perform pre processing tasks and cleaning the data.
     
-    return trainData
+    return data
 
 
 
-def getTestData():
-    
-    
-    testData = pickle.load(open("/Users/SK_Mac/Documents/Github/NLP_data/testSubData.p","rb"))
+def getTestData(N):
 
     """
     Convert reader object into list. 
     ID = [i][0]
     Title of question = [i][1]
     Body of question = [i][2]
-    Tags = [i][3]  // Only for training data, for testing data we don't have tags. 
-
+    Tags = [i][3] 
     """
+
+    testData = pickle.load(open("/Users/SK_Mac/Documents/Github/NLP_data/trainSubData.p","rb"))
+
+    random.shuffle(testData)
+
+    data = []
+
+
+    for x in range(N):
+        data.append(testData[x])
 
 
     #perform pre processing tasks and cleaning the data.
-    return testData
+    
+    return data
+
 
 
 
@@ -121,7 +138,19 @@ def getTags(N):
 
 
 
+def titleLengthFeature(data):
+    
+    length = len(data)
 
+    titleLength = []
+
+    for x in range(0,length-1):
+        #Get the tokens 
+        tokens = nltk.word_tokenize(data[x][1])
+        titleLength.append(len(tokens))         
+        
+    
+    return titleLength
 
 
 
