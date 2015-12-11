@@ -25,7 +25,7 @@ from bs4 import BeautifulSoup  #library to clean HTML data
 #from joblib import Parallel, delayed
 
 
-no_of_training = 1000
+no_of_training = 10000
 no_of_testing = 300
 
 
@@ -42,7 +42,7 @@ for x in range(no_of_training):
 
 	 #Preprocessing part
 
-	 temp_list = 3*trainData[x][1] + 4*(BeautifulSoup(trainData[x][2],"html.parser").text) + 2*trainData[x][3] 
+	 temp_list = 3*trainData[x][1] + 4*(BeautifulSoup(trainData[x][2],"html.parser").text)# + 2*trainData[x][3] 
 
 	 #temp_list = 4*list1[x][2] + 3*list1[x][1] + 2*list1[x][3] 
 
